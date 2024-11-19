@@ -6,17 +6,23 @@
         {{ item.name }}
       </li> -->
       <PlaylistCard
-        v-for="item in personalized.slice(0,6)"
+        v-for="item in personalized.slice(0, 6)"
         :key="item.id"
         :item="item"
         :col="3"
       ></PlaylistCard>
     </ul>
+
     <h3>最新音乐</h3>
     <ul class="newsong">
-      <li v-for="item in newsong" :key="item.id">
+      <!-- <li v-for="item in newsong" :key="item.id">
         {{ item.name }}
-      </li>
+      </li> -->
+      <NewsonglistCard
+        v-for="item in newsong"
+        :key="item.id"
+        :item="item"
+      ></NewsonglistCard>
     </ul>
   </div>
 </template>
@@ -24,18 +30,22 @@
 
 <script>
 import PlaylistCard from "@/components/PlaylistCard.vue";
+import NewsonglistCard from "@/components/NewsonglistCard.vue";
 
 export default {
   components: {
     PlaylistCard,
+    NewsonglistCard,
   },
 
   data: function () {
     return {
       personalized: [],
+      NewsonglistCard: [],
       newsong: [],
     };
   },
+
   // 编辑推荐获取
   created: function () {
     this.axios
@@ -58,7 +68,7 @@ export default {
 
 
 <style lang="less" scoped>
-.personalized{
+.personalized {
   display: flex;
   flex-wrap: wrap;
 }
