@@ -49,7 +49,7 @@ export default {
       this.result = true;
       this.axios
         .get(
-          `https://apis.netstart.cn/music/search/suggest?keywords="${n}"&type=mobile`
+          `/music/search/suggest?keywords=${n}"&type=mobile`
         )
         .then((response) => {
           this.allMatch = response.data.result.allMatch;
@@ -61,7 +61,7 @@ export default {
       this.result = false;
       this.songesult = true;
       this.axios
-        .get(`https://apis.netstart.cn/music/search?keywords="${keyword}`)
+        .get(`/music/search?keywords=${keyword}`)
         .then((response) => {
           this.songMatch = response.data.result.songs;
         });

@@ -4,6 +4,7 @@ import HomeRecommend from '../views/HomeRecommend.vue'
 import HomeHot from '../views/HomeHot.vue'
 import HomeSearch from '../views/HomeSearch.vue'
 import PlaylistDetail from '../views/PlaylistDetail.vue'
+import SongDetail from '../views/SongDetail.vue'
 
 Vue.use(VueRouter)
 
@@ -11,22 +12,31 @@ const routes = [
   {
     path: '/',
     name: 'recommend',
-    component: HomeRecommend
+    component: HomeRecommend,
+    meta:{showNav:true},
   },
   {
     path: '/hot',
     name: 'hot',
-    component: HomeHot
+    component: HomeHot,
+    meta:{showNav:true},
   },
   {
     path: '/search',
     name: 'search',
-    component: HomeSearch
+    component: HomeSearch,
+    meta:{showNav:true},
+
   },
   {
     path: '/playlist',
     name: 'playlist',
-    component: PlaylistDetail
+    component: PlaylistDetail,
+  },
+  {
+    path: '/song',
+    name: 'song',
+    component: SongDetail,
   },
   // {
   //   path: '/about',

@@ -1,10 +1,7 @@
 <template>
-  <div>
+  <div style="margin-bottom: 50px">
     <h3>编辑推荐</h3>
     <ul class="personalized">
-      <!-- <li v-for="item in personalized" :key="item.id">
-        {{ item.name }}
-      </li> -->
       <PlaylistCard
         v-for="item in personalized.slice(0, 6)"
         :key="item.id"
@@ -22,6 +19,7 @@
         v-for="item in newsong"
         :key="item.id"
         :item="item"
+        @play-this-song="setCurrentSong"
       ></NewsonglistCard>
     </ul>
   </div>
@@ -45,23 +43,23 @@ export default {
       newsong: [],
     };
   },
-
+  methods: {
+    setCurrentSong(item) {
+      this.$emit("play-this-song", item);
+    },
+  },
   // 编辑推荐获取
   created: function () {
-    this.axios
-      .get("https://apic.netstart.cn/music/personalized")
-      .then((response) => {
-        console.log(response.data);
-        this.personalized = response.data.result;
-      });
+    this.axios.get("/music/personalized").then((response) => {
+      console.log(response.data);
+      this.personalized = response.data.result;
+    });
 
     // 最新音乐获取
-    this.axios
-      .get("https://apis.netstart.cn/music/personalized/newsong")
-      .then((response) => {
-        console.log(response.data);
-        this.newsong = response.data.result;
-      });
+    this.axios.get("/music/personalized/newsong").then((response) => {
+      console.log(response.data);
+      this.newsong = response.data.result;
+    });
   },
 };
 </script>
@@ -71,5 +69,6 @@ export default {
 .personalized {
   display: flex;
   flex-wrap: wrap;
+  height: 250px;
 }
 </style>

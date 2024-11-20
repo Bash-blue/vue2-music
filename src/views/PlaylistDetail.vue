@@ -2,6 +2,7 @@
     <div v-if="tip">{{ tip }}</div>
     <div v-else-if="playlist">
         <h5>PlaylistDetail-{{ $route.query.id }} --{{ playlist.name }}</h5>
+                <img style="width: 100%" :src="playlist.coverImgUrl" alt="" />
         <ul>
             <li v-for="item in playlist.tracks" :key="item.id">{{ item.name }}</li>
         </ul>
@@ -19,7 +20,7 @@ export default {
     created: function () {
         if (this.$route.query.id) {
             this.axios
-                .get("https://apis.netstart.cn/music/playlist/detail", {
+                .get("/music/playlist/detail", {
                     params: { id: this.$route.query.id },
                 })
                 .then((response) => {

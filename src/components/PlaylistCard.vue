@@ -4,7 +4,7 @@
     :class="{ col3: col === 3, col2: col === 2 }"
     @click="gotoPlaylistDetailPage(item.id)"
   >
-    <div class="thumb">
+    <div class="thumb"  style="height:50px">
       <img
         :src="`${item.picUrl}?imageView=1&type=webp&thumbnail=247x0`"
         alt=""
