@@ -21,6 +21,9 @@
           v-for="item in songMatch"
           :key="item.id"
           :item="item"
+          :currentSongId="currentSongId"
+          :playing="playing"
+          @play-this-song="setCurrentSong"
         ></NewsonglistCard>
       </ul>
     </section>
@@ -34,6 +37,10 @@ export default {
   components: {
     NewsonglistCard,
   },
+  props: {
+    currentSongId: Number,
+    playing: Boolean,
+  },
   data() {
     return {
       question: "",
@@ -44,13 +51,12 @@ export default {
       NewsonglistCard: [],
     };
   },
+  
   watch: {
     question: function (n) {
       this.result = true;
       this.axios
-        .get(
-          `/music/search/suggest?keywords=${n}"&type=mobile`
-        )
+        .get(`/music/search/suggest?keywords=${n}"&type=mobile`)
         .then((response) => {
           this.allMatch = response.data.result.allMatch;
         });
@@ -60,11 +66,13 @@ export default {
     fetchDetails(keyword) {
       this.result = false;
       this.songesult = true;
-      this.axios
-        .get(`/music/search?keywords=${keyword}`)
-        .then((response) => {
-          this.songMatch = response.data.result.songs;
-        });
+      this.axios.get(`/music/search?keywords=${keyword}`).then((response) => {
+          console.log("23132211", response.data);
+        this.songMatch = response.data.result.songs;
+      });
+    },
+    setCurrentSong(item) {
+      this.$emit("play-this-song", item);
     },
   },
 };

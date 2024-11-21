@@ -9,7 +9,7 @@
         :src="`${item.picUrl}?imageView=1&type=webp&thumbnail=247x0`"
         alt=""
       />
-      <span>{{ item.platCount }}</span>
+      <span>{{ item.playCount }}</span>
     </div>
     <h5>{{ item.name }}</h5>
   </li>
@@ -57,6 +57,7 @@ export default {
     min-height: 30px;
     line-height: 1.2;
     font-size: 13px;
+    margin-top: 70px;
   }
   &.col3 {
     width: 30%;

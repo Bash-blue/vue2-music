@@ -20,6 +20,8 @@
         :key="item.id"
         :item="item"
         @play-this-song="setCurrentSong"
+        :currentSongId="currentSongId"
+        :playing="playing"
       ></NewsonglistCard>
     </ul>
   </div>
@@ -35,7 +37,10 @@ export default {
     PlaylistCard,
     NewsonglistCard,
   },
-
+  props: {
+    currentSongId: Number,
+    playing: Boolean,
+  },
   data: function () {
     return {
       personalized: [],
@@ -69,6 +74,5 @@ export default {
 .personalized {
   display: flex;
   flex-wrap: wrap;
-  height: 250px;
 }
 </style>

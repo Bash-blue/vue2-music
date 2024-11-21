@@ -5,19 +5,29 @@
       <router-link to="/hot">热歌榜</router-link>
       <router-link to="/search">搜索</router-link>
     </nav>
-    <router-view @play-this-song="currentSong = $event" />
+    <router-view
+      @play-this-song="currentSong = $event"
+      :currentSongId="currentSong?.id"
+      :playing="playing"
+      :duration="duration"
+      :currentTime="currentTime"
+      @change-play-time="$refs.audioEle.currentTime = $event"
+    />
 
     <audio
       v-if="currentSong"
       controls
       style="height: 30px"
+      autoplay
       :src="`https://music.163.com/song/media/outer/url?id=${currentSong.id}.mp3`"
       @play="playing = true"
       @pause="playing = false"
+      @durationchange="duration = $event.target.duration"
+      @timeupdate="currentTime = $event.target.currentTime"
       ref="audioEle"
     ></audio>
     <PlayBar
-      v-if="currentSong"
+      v-if="currentSong && !$route.meta.hidePlaybar"
       :currentSong="currentSong"
       :playing="playing"
       @start-play-song="$refs.audioEle.play()"
@@ -35,6 +45,8 @@ export default {
   },
   data: function () {
     return {
+      duration: 0,
+      currentTime:0,
       currentSong: null,
       playing: false,
     };
