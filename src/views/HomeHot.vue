@@ -1,5 +1,5 @@
 <template>
-  <div>
+    <div style="margin: 0px 0 50px 0">
     <ul class="HomeHot">
       <NewsonglistCard
         v-for="item in hotsong"

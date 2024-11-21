@@ -4,7 +4,7 @@
     :class="{ col3: col === 3, col2: col === 2 }"
     @click="gotoPlaylistDetailPage(item.id)"
   >
-    <div class="thumb"  style="height:50px">
+    <div class="thumb" style="height: 50px">
       <img
         :src="`${item.picUrl}?imageView=1&type=webp&thumbnail=247x0`"
         alt=""
@@ -21,12 +21,12 @@ export default {
     item: Object,
     col: Number,
   },
-  methods:{
-    gotoPlaylistDetailPage:function (id) {
-        // console.log(123);
-        this.$router.push({ path: "playlist", query: {id} })
-    }
-  }
+  methods: {
+    gotoPlaylistDetailPage: function (id) {
+      // console.log(123);
+      this.$router.push({ path: "playlist", query: { id } });
+    },
+  },
 };
 </script>
 
@@ -58,11 +58,18 @@ export default {
     line-height: 1.2;
     font-size: 13px;
     margin-top: 70px;
+    margin-bottom: 10px;
   }
   &.col3 {
     width: 30%;
     &:nth-child(3n + 1) {
       margin-left: 3px;
+      margin-right: 3px;
+    }
+    &:nth-child(3n + 2) {
+      margin-right: 3px;
+    }
+    &:nth-child(3n + 3) {
       margin-right: 3px;
     }
   }

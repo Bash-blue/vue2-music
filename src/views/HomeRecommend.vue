@@ -1,5 +1,5 @@
 <template>
-  <div style="margin-bottom: 50px">
+  <div class="HomeRecommend">
     <h3>编辑推荐</h3>
     <ul class="personalized">
       <PlaylistCard
@@ -10,7 +10,7 @@
       ></PlaylistCard>
     </ul>
 
-    <h3>最新音乐</h3>
+    <h3 class="newest" style="padding-top: 35px">最新音乐</h3>
     <ul class="newsong">
       <!-- <li v-for="item in newsong" :key="item.id">
         {{ item.name }}
@@ -71,8 +71,30 @@ export default {
 
 
 <style lang="less" scoped>
-.personalized {
-  display: flex;
-  flex-wrap: wrap;
+.HomeRecommend {
+  h3 {
+    font-size: 17px;
+    padding: 10px;
+    position: relative;
+    &::before {
+      left: 0px;
+      content: "";
+      position: absolute;
+      top: 31%;
+      width: 3px;
+      height: 20px;
+      background-color: #d33a31;
+      border-radius: 1.5px;
+    }
+  }
+  .newest {
+    &::before {
+      margin-top: 14px;
+    }
+  }
+  .personalized {
+    display: flex;
+    flex-wrap: wrap;
+  }
 }
 </style>

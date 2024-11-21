@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="margin: 32px 0 50px 0">
     <p>请输入你要搜索的歌曲或歌手</p>
     <input type="text" v-model="question" />
 

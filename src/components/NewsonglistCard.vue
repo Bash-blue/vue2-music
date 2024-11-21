@@ -3,12 +3,12 @@
     <li
       class="song-item"
       :class="{ active: currentSongId === item.id }"
-      style="height: 50px"
       @click="playthissong(item)"
     >
-      <div>
+      <div class="Signature">
         <h5>{{ item.name }}</h5>
         <p>
+          <i class="u-hmsprt sghot"></i>
           <span
             v-for="ar in item.song ? item.song.artists : item.ar"
             :key="ar.id"
@@ -43,25 +43,41 @@ export default {
 
 <style lang="less" scoped>
 .active {
-  background-color: lightblue;
+  // background-color: #d43c33;
 }
 .song-item {
+  height: 55.5px;
   display: flex;
   justify-content: space-between;
   padding: 5px 10px;
   margin-left: 10px;
   padding-left: 0;
   border-bottom: 1px solid rgba(211, 211, 211, 0.448);
+  .Signature {
+    .u-hmsprt {
+      background: url(//s3.music.126.net/mobile-new/img/index_icon_2x.png?5207a28…=)
+        no-repeat;
+      background-size: 166px 97px;
+      display: inline-block;
+      width: 12px;
+      height: 8px;
+      margin-right: 4px;
+    }
+    p {
+      font-size: 12px;
+      color: #888;
+      padding-top: 5px; 
+    }
+  }
 }
 
 .icon {
   .play {
     background-image: url("https://s3.music.126.net/mobile-new/img/index_icon_2x.png");
-    // display: inline-block;
     width: 22px;
     height: 22px;
     background-position: -24px 0;
-    // background-color: red;
+    margin-top: 12px;
     background-size: 166px 97px;
   }
 
@@ -84,12 +100,13 @@ export default {
       display: block;
       width: 15%;
       height: 100%;
-      background-color: red;
+      background-color: #d43c33;
       animation: xxx 0.8s linear 0;
       animation-iteration-count: infinite;
       animation-direction: alternate;
       transform-origin: bottom;
       animation-play-state: paused;
+      margin-top: 12px;
       &:nth-child(1) {
         animation-delay: 0s;
       }
