@@ -4,7 +4,7 @@
       <img src="@/assets/wangyiyunyinle.png" alt="网易云音乐图标" />
       <div class="download-button" @click="downloadApp">下载APP</div>
     </div>
-    <div style="margin-top: 40px"  v-if="currentPath === '/'">
+    <div style="margin-top: 40px" v-if="currentPath === '/'">
       <img src="@/assets/huiyuan.png" alt="开通会员" />
     </div>
     <nav v-if="$route.meta.showNav">
@@ -24,15 +24,16 @@
         >
       </div>
     </nav>
-    <router-view
-      @play-this-song="currentSong = $event"
-      :currentSongId="currentSong?.id"
-      :playing="playing"
-      :duration="duration"
-      :currentTime="currentTime"
-      @change-play-time="$refs.audioEle.currentTime = $event"
-    />
-
+    <keep-alive>
+      <router-view
+        @play-this-song="currentSong = $event"
+        :currentSongId="currentSong?.id"
+        :playing="playing"
+        :duration="duration"
+        :currentTime="currentTime"
+        @change-play-time="$refs.audioEle.currentTime = $event"
+      />
+    </keep-alive>
     <audio
       v-if="currentSong"
       controls

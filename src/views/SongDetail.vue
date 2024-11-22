@@ -1,15 +1,15 @@
 <template>
   <div class="song-detail" v-if="song">
     <button @click="$router.back()">返回</button>
-    <h3>SongDetail - {{ $route.query.id }}</h3>
     <img
+      v-if="showDisc"
       class="anima"
       :class="{ playing: playing }"
       style="width: 200px; height: 200px; border-radius: 50%"
       :src="song.al.picUrl"
       alt=""
     />
-
+    <SongLyric v-else :currentTime="currentTime" :duration="duration" :playing="playing"/>
     <div>
       <div class="">
         <div class="span">{{ currentTime | time2mmss }}</div>
@@ -48,7 +48,12 @@
 </template>
 
 <script>
+import SongLyric from "@/components/SongLyric.vue";
+
 export default {
+  components: {
+    SongLyric,
+  },
   props: {
     currentSongId: Number,
     playing: Boolean,
@@ -60,6 +65,7 @@ export default {
       song: null,
       userValue: this.currentTime,
       inputing: false,
+      showDisc: false,
     };
   },
   created: function () {
@@ -71,6 +77,7 @@ export default {
       })
       .then((res) => {
         this.song = res.data.songs[0];
+        this.$emit("play-this-song",res.data.songs[0])
       });
   },
   watch: {

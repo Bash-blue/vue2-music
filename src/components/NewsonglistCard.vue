@@ -107,6 +107,7 @@ export default {
       transform-origin: bottom;
       animation-play-state: paused;
       margin-top: 12px;
+      border-radius: 7px;
       &:nth-child(1) {
         animation-delay: 0s;
       }
