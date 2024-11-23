@@ -24,19 +24,20 @@
         >
       </div>
     </nav>
-    <keep-alive>
-      <router-view
-        @play-this-song="currentSong = $event"
-        :currentSongId="currentSong?.id"
-        :playing="playing"
-        :duration="duration"
-        :currentTime="currentTime"
-        @change-play-time="$refs.audioEle.currentTime = $event"
-      />
-    </keep-alive>
+
+    <router-view
+      @playMusic="playMusic"
+      @pauseMusic="pauseMusic"
+      @play-this-song="currentSong = $event"
+      :currentSongId="currentSong?.id"
+      :playing="playing"
+      :duration="duration"
+      :currentTime="currentTime"
+      @change-play-time="$refs.audioEle.currentTime = $event"
+    />
+
     <audio
       v-if="currentSong"
-      controls
       style="height: 30px"
       autoplay
       :src="`https://music.163.com/song/media/outer/url?id=${currentSong.id}.mp3`"
@@ -46,6 +47,7 @@
       @timeupdate="currentTime = $event.target.currentTime"
       ref="audioEle"
     ></audio>
+
     <PlayBar
       v-if="currentSong && !$route.meta.hidePlaybar"
       :currentSong="currentSong"
@@ -81,6 +83,17 @@ export default {
   methods: {
     downloadApp() {
       alert("下载APP功能尚未实现");
+    },
+
+    playMusic() {
+      console.log("Play method called22222222222");
+      // this.playing = !this.playing;
+      this.$refs.audioEle.pause();
+    },
+    pauseMusic() {
+      console.log("Play method called111111111111111111");
+      this.$refs.audioEle.play();
+      // this.playing = !this.playing;
     },
   },
 };

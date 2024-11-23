@@ -13,10 +13,27 @@
       "
       alt=""
     />
-    <h3>{{ currentSong.name }}</h3>
+    <div class="playbar-info">
+      <h3 class="playbar-title">{{ currentSong.name }}</h3>
+    </div>
 
-    <button v-if="playing" @click.stop="$emit('pause-play-song')">暂停</button>
-    <button v-else @click.stop="$emit('start-play-song')">播放</button>
+    <button
+      v-if="playing"
+      @click.stop="$emit('pause-play-song')"
+      class="playbar-button"
+    >
+      暂停
+    </button>
+    <button
+      v-else
+      @click.stop="$emit('start-play-song')"
+      class="playbar-button"
+    >
+      播放
+    </button>
+    <button>
+      列表
+    </button>
   </div>
 </template>
 
@@ -40,13 +57,54 @@ export default {
 <style lang="less" scoped>
 .playbar {
   width: 100%;
-  height: 50px;
-  background-color: lightblue;
+  height: 60px;
+  background-color: rgba(0, 0, 0);
   position: fixed;
   bottom: 0;
   left: 0;
-
   display: flex;
   align-items: center;
+  padding: 0 10px;
+  box-sizing: border-box;
+  color: #fff;
+  font-size: 14px;
+
+  &-cover {
+    width: 40px;
+    height: 40px;
+    border-radius: 4px;
+    margin-right: 10px;
+  }
+
+  &-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex-grow: 1;
+    margin-right: 20px;
+  }
+
+  &-title {
+    font-size: 16px;
+    margin-bottom: 2px;
+  }
+
+  &-artist {
+    font-size: 12px;
+  }
+
+  &-button {
+    padding: 5px 10px;
+    background-color: #c20d0d;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    outline: none;
+
+    &:hover {
+      background-color: #d43c33;
+    }
+  }
 }
 </style>

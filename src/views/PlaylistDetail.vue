@@ -1,19 +1,27 @@
 <template>
   <div v-if="tip">{{ tip }}</div>
   <div v-else-if="playlist">
-    <h5>PlaylistDetail-{{ $route.query.id }} --{{ playlist.name }}</h5>
-    <img style="width: 100%" :src="playlist.coverImgUrl" alt="" />
-    <ul>
-      <!-- <li v-for="item in playlist.tracks" :key="item.id">{{ item.name }}</li> -->
-      <NewsonglistCard
-        v-for="item in playlist.tracks"
-        :key="item.id"
-        :item="item"
-        :currentSongId="currentSongId"
-        :playing="playing"
-        @play-this-song="setCurrentSong"
-      ></NewsonglistCard>
-    </ul>
+    <div
+      class="playtop"
+      :style="{ backgroundImage: 'url(' + playlist.coverImgUrl + ')' }"
+    ></div>
+    <span>{{ playlist.playCount }}</span>
+    <img :src="playlist.coverImgUrl" alt="" />
+    <h5>{{ playlist.name }}</h5>
+    <div>
+      <h3 class="u-smtitle">歌曲列表</h3>
+      <ul>
+        <!-- <li v-for="item in playlist.tracks" :key="item.id">{{ item.name }}</li> -->
+        <NewsonglistCard
+          v-for="item in playlist.tracks"
+          :key="item.id"
+          :item="item"
+          :currentSongId="currentSongId"
+          :playing="playing"
+          @play-this-song="setCurrentSong"
+        ></NewsonglistCard>
+      </ul>
+    </div>
   </div>
 </template>
 
@@ -56,4 +64,50 @@ export default {
 };
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+.playtop {
+  height: 200px;
+  background-size: cover;
+  filter: blur(10px);
+  position: relative;
+  margin-top: -10px;
+}
+.playtop:after {
+  content: " ";
+  background-color: rgba(0, 0, 0, 0.25);
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+}
+span {
+  position: absolute;
+  top: 117px;
+  left: 58px;
+  color: #fff;
+  z-index: 1;
+}
+img {
+  width: 35%;
+  position: absolute;
+  top: 110px;
+  left: 15px;
+}
+h5 {
+  width: 50%;
+  position: absolute;
+  top: 115px;
+  left: 170px;
+  color: #fff;
+}
+.u-smtitle {
+  height: 23px;
+  line-height: 23px;
+  padding: 0 10px;
+  font-size: 12px;
+  color: #666;
+  background-color: #eeeff0;
+}
+</style>

@@ -8,7 +8,7 @@
             lyricElementsHeight
               .slice(0, currentLyricIndex)
               .reduce((total, num) => total + num, 0) +
-          135 +
+          45 +
           'px',
       }"
     >
@@ -64,7 +64,7 @@ export default {
   },
   computed: {
     currentLyricIndex: function () {
-      console.log(10, this.parsedLyric);
+      // console.log(10, this.parsedLyric);
       return this.parsedLyric.findLastIndex((item) => {
         return item.time <= this.currentTime;
       });
@@ -103,9 +103,9 @@ export default {
   }
 }
 .song-lyric {
-  height: 300px;
-  background-color: lightblue;
+  height: 120px;
   overflow: hidden;
+  text-align: center;
   //
   .list {
     // padding: 10px;
