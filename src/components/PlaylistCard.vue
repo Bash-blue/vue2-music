@@ -3,7 +3,7 @@
     class="playlist-card"
     :class="{ col3: col === 3, col2: col === 2 }"
     @click="gotoPlaylistDetailPage(item.id)"
-     :item="playlist"
+    
   >
     <div class="thumb" style="height: 50px">
       <img

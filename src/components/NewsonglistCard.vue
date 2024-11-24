@@ -19,7 +19,6 @@
       <div class="icon">
         <div v-if="currentSongId !== item.id" class="play"></div>
         <div v-else class="anima" :class="{ playing: playing }">
-          <span></span><span></span><span></span><span></span>
         </div>
       </div>
     </li>

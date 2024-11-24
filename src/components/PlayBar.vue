@@ -31,7 +31,7 @@
     >
       播放
     </button>
-    <button>
+    <button class="playbar-button">
       列表
     </button>
   </div>
@@ -85,8 +85,9 @@ export default {
   }
 
   &-title {
-    font-size: 16px;
-    margin-bottom: 2px;
+    font-size: 12px;
+    margin-left: 10px;
+    margin-bottom: 17px;
   }
 
   &-artist {
@@ -100,6 +101,7 @@ export default {
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    margin: 5px;
     outline: none;
 
     &:hover {

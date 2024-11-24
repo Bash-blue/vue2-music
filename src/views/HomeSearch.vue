@@ -1,7 +1,11 @@
 <template>
   <div style="margin: 32px 0 50px 0">
     <!-- <p>请输入你要搜索的歌曲或歌手</p> -->
-    <form class="m-input f-bd f-bd-btm" method="get" action="#">
+    <form
+      class="m-input f-bd f-bd-btm"
+      method="get"
+      @submit.prevent="handleFormSubmit"
+    >
       <div class="inputcover">
         <i class="u-svg u-svg-srch"></i
         ><input
@@ -12,19 +16,46 @@
           autocomplete="off"
           value=""
           v-model="question"
+          @keyup.enter="handleEnter"
         />
         <figure class="close"><i class="u-svg u-svg-empty"></i></figure>
       </div>
     </form>
     <!-- <input type="text" v-model="question" /> -->
 
+    <section class="bendi"  v-if="!shouldShowNewsonglistCard && !question">
+      <p>热门搜索</p>
+      <div
+        v-for="(item, index) in hotSongs"
+        :key="index"
+        class="search-item"
+        @click="fetchDetails(item.name)"
+      >
+        <span>{{ item.name }}</span>
+      </div>
+    </section>
+
+    <section class="lishi"  v-if="!shouldShowNewsonglistCard && !question">
+      <div
+        v-for="(item, index) in searchHistory"
+        :key="index"
+        class="search-item"
+        @click="fetchDetails(item)"
+      >
+        <i class="u-svg u-svg-histy"></i>
+        <span>{{ item }}</span>
+        <i class="u-svg u-svg-close" @click="removeFromHistory(index)"></i>
+      </div>
+    </section>
+
     <section v-if="result" class="searchtips">
-      <h3 class="tips">搜索“{{ question }}”</h3>
+      <h3 v-if="question" class="tips">搜索“{{ question }}”</h3>
       <ul>
         <li
           v-for="item in allMatch"
-          @click="fetchDetails(item.keyword)"
+          @click="handleEnter(item.keyword)"
           :key="item.id"
+          
         >
           <i></i>
           <span>{{ item.keyword }}</span>
@@ -32,7 +63,7 @@
       </ul>
     </section>
 
-    <section v-if="songesult">
+    <section v-if="shouldShowNewsonglistCard && !result">
       <ul>
         <NewsonglistCard
           v-for="item in songMatch"
@@ -57,6 +88,7 @@ export default {
   props: {
     currentSongId: Number,
     playing: Boolean,
+    hotSongs: Array,
   },
   data() {
     return {
@@ -66,9 +98,22 @@ export default {
       songesult: false,
       songMatch: [],
       NewsonglistCard: [],
+      searchHistory: JSON.parse(localStorage.getItem("searchHistory")) || [],
     };
   },
-
+  computed: {
+    formattedSearchHistory() {
+      return this.searchHistory
+        .slice(0, 4)
+        .map((item) => `<li>${item}</li>`)
+        .join("");
+    },
+     shouldShowNewsonglistCard() {
+      // 根据某些条件决定是否显示NewsonglistCard
+      // 例如，可以是基于songMatch数组的长度
+      return this.songMatch.length > 0;
+    }
+  },
   watch: {
     question: function (n) {
       this.result = true;
@@ -78,8 +123,17 @@ export default {
           this.allMatch = response.data.result.allMatch;
         });
     },
+    searchHistory(newHistory) {
+      localStorage.setItem("searchHistory", JSON.stringify(newHistory));
+    },
   },
   methods: {
+    handleFormSubmit() {
+      // 执行搜索逻辑
+      this.search();
+      // 更新搜索历史
+      this.updateSearchHistory(this.question);
+    },
     fetchDetails(keyword) {
       this.result = false;
       this.songesult = true;
@@ -91,13 +145,47 @@ export default {
     setCurrentSong(item) {
       this.$emit("play-this-song", item);
     },
+
+   handleEnter(keyword) {
+      // 执行搜索逻辑
+      this.fetchDetails(keyword);
+      // 更新搜索历史
+      this.updateSearchHistory(keyword);
+    },
+     updateSearchHistory(keyword) {
+      // 确保搜索词不在历史中，或者移除旧的搜索词
+      const history = this.searchHistory.filter((item) => item !== keyword);
+      // 添加新的搜索词到数组开头
+      history.unshift(keyword);
+      // 只保留最近的8个搜索值
+      history.splice(8);
+      // 保存到localStorage
+      localStorage.setItem("searchHistory", JSON.stringify(history));
+      // 更新组件的数据
+      this.searchHistory = history;
+    },
+    search() {
+      // 执行搜索逻辑...
+      this.updateSearchHistory(this.question);
+    },
+
+    removeFromHistory(index) {
+      // 从数组中删除对应的项
+      this.searchHistory.splice(index, 1);
+      // 更新本地存储
+      localStorage.setItem("searchHistory", JSON.stringify(this.searchHistory));
+    },
+  },
+  mounted() {
+    this.searchHistory =
+      JSON.parse(localStorage.getItem("searchHistory")) || [];
   },
 };
 </script>
 
 <style lang="less" scoped>
 .m-input {
-  padding: 15px 10px;
+  padding: 15px 10px 0px 10px;
 }
 .m-input .input:focus + .holder {
   display: none;
@@ -227,6 +315,57 @@ summary {
       width: 15px;
       height: 15px;
       background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMCAzMCI+PHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBmaWxsPSIjMDQwMDAwIiBkPSJNMjguMTgxIDI3LjUzNWwtMS40MTQgMS40MTQtNy43NTUtNy43NTRBMTEuNDQ1IDExLjQ0NSAwIDAgMSAxMS41IDI0QzUuMTQ5IDI0IDAgMTguODUyIDAgMTIuNSAwIDYuMTQ5IDUuMTQ5IDEgMTEuNSAxIDE3Ljg1MiAxIDIzIDYuMTQ5IDIzIDEyLjVjMCAyLjc1Ni0uOTczIDUuMjg1LTIuNTg5IDcuMjY2bDcuNzcgNy43Njl6TTExLjUgM2E5LjUgOS41IDAgMSAwIDAgMTkgOS41IDkuNSAwIDAgMCAwLTE5eiIgb3BhY2l0eT0iLjMiLz48L3N2Zz4=);
+    }
+  }
+}
+.bendi {
+  padding: 18px 18px 0px 18px;
+  p {
+    font-size: 12px;
+    padding: 10px;
+  }
+  .search-item {
+    display: inline-block;
+    margin-right: 10px;
+    margin-bottom: 5px;
+    padding: 5px 12px;
+    background-color: #fbfcfd;
+    border-radius: 15px;
+    font-size: 14px;
+    border: 1px solid #efeff2;
+  }
+}
+
+.lishi {
+  .m-history .u-svg-histy {
+    margin: 0 10px;
+  }
+  .u-svg-histy {
+    width: 15px;
+    height: 15px;
+    background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMCAzMCI+PHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBmaWxsPSIjYzljYWNhIiBkPSJNMTUgMzBDNi43MTYgMzAgMCAyMy4yODQgMCAxNVM2LjcxNiAwIDE1IDBzMTUgNi43MTYgMTUgMTUtNi43MTYgMTUtMTUgMTVtMC0yOEM3LjgyIDIgMiA3LjgyIDIgMTVzNS44MiAxMyAxMyAxMyAxMy01LjgyIDEzLTEzUzIyLjE4IDIgMTUgMm03IDE2aC04YTEgMSAwIDAgMS0xLTFWN2ExIDEgMCAxIDEgMiAwdjloN2ExIDEgMCAxIDEgMCAyIi8+PC9zdmc+);
+  }
+  .u-svg-close {
+    position: absolute;
+    right: 10px;
+    top: 20px;
+    width: 12px;
+    height: 12px;
+    background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBmaWxsPSIjOTk5ODk5IiBkPSJNMTMuMzc5IDEybDEwLjMzOCAxMC4zMzdhLjk3NS45NzUgMCAxIDEtMS4zNzggMS4zNzlMMTIuMDAxIDEzLjM3OCAxLjY2MyAyMy43MTZhLjk3NC45NzQgMCAxIDEtMS4zNzgtMS4zNzlMMTAuNjIzIDEyIC4yODUgMS42NjJBLjk3NC45NzQgMCAxIDEgMS42NjMuMjg0bDEwLjMzOCAxMC4zMzhMMjIuMzM5LjI4NGEuOTc0Ljk3NCAwIDEgMSAxLjM3OCAxLjM3OEwxMy4zNzkgMTIiLz48L3N2Zz4=);
+  }
+  span {
+    font-size: 16px;
+    margin-left: 10px;
+  }
+  .search-item {
+    position: relative;
+    height: 55.5px;
+    margin-left: 20px;
+    margin-right: 10px;
+    padding-left: 0;
+    padding-top: 20px;
+    border-bottom: 1px solid rgba(211, 211, 211, 0.448);
+    &:hover {
     }
   }
 }

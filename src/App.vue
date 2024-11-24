@@ -34,6 +34,8 @@
       :duration="duration"
       :currentTime="currentTime"
       @change-play-time="$refs.audioEle.currentTime = $event"
+      @send-hot-songs="handleHotSongs"
+      :hotSongs="hotSongs"
     />
 
     <audio
@@ -72,6 +74,7 @@ export default {
       currentSong: null,
       playing: false,
       currentPath: this.$route.path, // 添加当前路由路径到data中
+      hotSongs: []
     };
   },
   watch: {
@@ -94,6 +97,9 @@ export default {
       console.log("Play method called111111111111111111");
       this.$refs.audioEle.play();
       // this.playing = !this.playing;
+    },
+     handleHotSongs(songs) {
+      this.hotSongs = songs; // 接收子组件发送的数据
     },
   },
 };

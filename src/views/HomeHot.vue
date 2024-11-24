@@ -39,11 +39,18 @@ export default {
     setCurrentSong(item) {
       this.$emit("play-this-song", item);
     },
+    sendHotSongsToParent() {
+      // 获取前八个热门歌曲项
+      const hotSongs = this.hotsong.slice(0, 8);
+      // 触发事件，将数据传递给父组件
+      this.$emit('send-hot-songs', hotSongs);
+    },
   },
   created: function () {
     this.axios.get("/music/playlist/detail?id=3778678").then((response) => {
       console.log("1111111", response.data);
       this.hotsong = response.data.playlist.tracks;
+       this.sendHotSongsToParent();
     });
   },
 };
