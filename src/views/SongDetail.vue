@@ -1,6 +1,6 @@
 <template>
   <div class="song-detail" v-if="song">
-    <div class="imgdiv">
+    <div class="imgdiv" :style="{ '--degree': rotateState ? '30deg' : '0deg' }">
       <img
         class="anima"
         :class="{ playing: playing }"
@@ -40,15 +40,23 @@
       </div>
 
       <div class="controls">
-        <button>模</button>
-        <button>上</button>
+        <button class="button1">模</button>
+        <button class="button2">上</button>
         <button v-if="playing" @click="pplayMusic" class="playbar-button">
-          暂停
+          <img
+            src="https://p6.music.126.net/obj/wonDlsKUwrLClGjCm8Kx/34207669669/f020/7908/a749/34315097c835773c4e003e72fbbae607.png"
+            alt="play"
+          />
         </button>
-        <button v-else @click="ppauseMusic" class="playbar-button">播放</button>
-        <button>下</button>
+        <button v-else @click="ppauseMusic" class="playbar-button">
+          <img
+            src="https://p6.music.126.net/obj/wonDlsKUwrLClGjCm8Kx/34207667955/0616/bd45/3537/50928579d6616a7f811d19da1162e149.png"
+            alt="pause"
+          />
+        </button>
+        <button class="button2">下</button>
 
-        <button>列</button>
+        <button class="button1">列</button>
       </div>
     </div>
   </div>
@@ -74,14 +82,17 @@ export default {
       userValue: this.currentTime,
       inputing: false,
       showDisc: false,
+      rotateState: false,
     };
   },
   methods: {
     pplayMusic() {
       this.$emit("playMusic");
+      this.rotateState = true; // 设置旋转状态为真
     },
     ppauseMusic() {
       this.$emit("pauseMusic");
+      this.rotateState = false; // 设置旋转状态为假
     },
   },
   created: function () {
@@ -163,6 +174,21 @@ export default {
 
     width: 90%;
     justify-content: space-between;
+
+    button {
+      width: 50px;
+      height: 40px;
+      border-radius: 20px;
+      background-color: rgba(46, 49, 49, 0);
+    }
+    .button1 {
+      width: 30px;
+      height: 30px;
+    }
+    .button2 {
+      width: 35px;
+      height: 35px;
+    }
   }
 }
 
@@ -192,6 +218,9 @@ export default {
     height: 28vw;
     background: url(https://p5.music.126.net/obj/wonDlsKUwrLClGjCm8Kx/28513977227/139b/06a3/e1e3/929b3b4b49bf5c6ef05c795e9e1f2516.png)
       no-repeat center center / cover;
+    transition: transform 0.3s; /* 添加过渡效果 */
+    transform: rotate(var(--degree, 0deg)); /* 使用CSS变量控制旋转 */
+    transform-origin: 50% 20%;
   }
   .anima {
     animation: rotate 3s linear;

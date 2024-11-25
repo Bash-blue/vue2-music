@@ -45,6 +45,8 @@ export default {
   methods: {
     setCurrentSong(item) {
       this.$emit("play-this-song", item);
+      this.$emit("update:playlistTracks", this.playlist.tracks); // 触发事件传递 playlist.tracks
+      this.$emit("update:DcurrentSongId", item.id); // 触发事件传递当前歌曲的 id
     },
   },
   created: function () {

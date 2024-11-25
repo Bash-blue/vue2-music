@@ -19,6 +19,7 @@
       <div class="icon">
         <div v-if="currentSongId !== item.id" class="play"></div>
         <div v-else class="anima" :class="{ playing: playing }">
+          <span></span><span></span><span></span><span></span>
         </div>
       </div>
     </li>
@@ -40,7 +41,7 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 .active {
   // background-color: #d43c33;
 }
@@ -62,10 +63,13 @@ export default {
       height: 8px;
       margin-right: 4px;
     }
+    h5 {
+      color: #000;
+    }
     p {
       font-size: 12px;
       color: #888;
-      padding-top: 5px; 
+      padding-top: 5px;
     }
   }
 }

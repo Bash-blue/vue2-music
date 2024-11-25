@@ -38,12 +38,15 @@ export default {
   methods: {
     setCurrentSong(item) {
       this.$emit("play-this-song", item);
+      this.$emit('update:hotSongs', this.hotsong);
+      this.$emit("update:HcurrentSongId", item.id); // 触发事件传递当前歌曲的 id
     },
     sendHotSongsToParent() {
       // 获取前八个热门歌曲项
-      const hotSongs = this.hotsong.slice(0, 8);
+      const hotSongs = this.hotsong.slice(0, 100);
       // 触发事件，将数据传递给父组件
       this.$emit('send-hot-songs', hotSongs);
+      
     },
   },
   created: function () {

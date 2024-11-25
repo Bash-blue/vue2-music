@@ -23,10 +23,10 @@
     </form>
     <!-- <input type="text" v-model="question" /> -->
 
-    <section class="bendi"  v-if="!shouldShowNewsonglistCard && !question">
+    <section class="bendi"  v-if="result && !question">
       <p>热门搜索</p>
       <div
-        v-for="(item, index) in hotSongs"
+        v-for="(item, index) in topHotSongs"
         :key="index"
         class="search-item"
         @click="fetchDetails(item.name)"
@@ -35,7 +35,7 @@
       </div>
     </section>
 
-    <section class="lishi"  v-if="!shouldShowNewsonglistCard && !question">
+    <section class="lishi"  v-if="result && !question">
       <div
         v-for="(item, index) in searchHistory"
         :key="index"
@@ -63,7 +63,7 @@
       </ul>
     </section>
 
-    <section v-if="shouldShowNewsonglistCard && !result">
+    <section v-if="!result">
       <ul>
         <NewsonglistCard
           v-for="item in songMatch"
@@ -101,6 +101,7 @@ export default {
       searchHistory: JSON.parse(localStorage.getItem("searchHistory")) || [],
     };
   },
+  
   computed: {
     formattedSearchHistory() {
       return this.searchHistory
@@ -108,11 +109,9 @@ export default {
         .map((item) => `<li>${item}</li>`)
         .join("");
     },
-     shouldShowNewsonglistCard() {
-      // 根据某些条件决定是否显示NewsonglistCard
-      // 例如，可以是基于songMatch数组的长度
-      return this.songMatch.length > 0;
-    }
+topHotSongs() {
+    return this.hotSongs.slice(0, 8);
+  },
   },
   watch: {
     question: function (n) {
@@ -126,7 +125,8 @@ export default {
     searchHistory(newHistory) {
       localStorage.setItem("searchHistory", JSON.stringify(newHistory));
     },
-  },
+    
+  },  
   methods: {
     handleFormSubmit() {
       // 执行搜索逻辑
@@ -140,10 +140,12 @@ export default {
       this.axios.get(`/music/search?keywords=${keyword}`).then((response) => {
         console.log("23132211", response.data);
         this.songMatch = response.data.result.songs;
+       this.$emit('update:songMatch', this.songMatch); // 触发事件传递 songMatch
       });
     },
     setCurrentSong(item) {
       this.$emit("play-this-song", item);
+      this.$emit("update:ScurrentSongId", item.id);  // 触发事件传递当前歌曲的 id
     },
 
    handleEnter(keyword) {

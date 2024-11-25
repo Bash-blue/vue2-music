@@ -93,12 +93,12 @@ export default {
 @keyframes xxx {
   0% {
     background-position-x: 100%;
-    background-image: linear-gradient(to right, blue 49%, red 51%);
+    background-image: linear-gradient(to right, rgb(30, 30, 43) 49%, rgb(198, 194, 194) 51%);
     color: transparent;
   }
   100% {
     background-position-x: 0%;
-    background-image: linear-gradient(to right, blue 49%, red 51%);
+    background-image: linear-gradient(to right, rgb(30, 30, 43) 49%, rgb(198, 194, 194)51%);
     color: transparent;
   }
 }

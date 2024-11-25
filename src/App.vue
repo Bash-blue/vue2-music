@@ -24,20 +24,29 @@
         >
       </div>
     </nav>
-
-    <router-view
-      @playMusic="playMusic"
-      @pauseMusic="pauseMusic"
-      @play-this-song="currentSong = $event"
-      :currentSongId="currentSong?.id"
-      :playing="playing"
-      :duration="duration"
-      :currentTime="currentTime"
-      @change-play-time="$refs.audioEle.currentTime = $event"
-      @send-hot-songs="handleHotSongs"
-      :hotSongs="hotSongs"
-    />
-
+    <keep-alive :exclude="['SongDetail']">
+      <router-view
+        @playMusic="playMusic"
+        @pauseMusic="pauseMusic"
+        @play-this-song="currentSong = $event"
+        @update:newsong="handleNewsong"
+        @update:currentSongId="updateCurrentSongId"
+        @update:ScurrentSongId="updateScurrentSongId"
+        @update:DcurrentSongId="updateCurrentSongIdFromDetail"
+        @update:HcurrentSongId="HcurrentSongIdFromHot"
+        @update:playlistTracks="handlePlaylistTracks"
+        @update:hotSongs="updatehotSongs"
+        @update:songMatch="updatesongMatchS"
+        :currentSongId="currentSong?.id"
+        :playing="playing"
+        :duration="duration"
+        :currentTime="currentTime"
+        @change-play-time="$refs.audioEle.currentTime = $event"
+        @send-hot-songs="searchHotSongba"
+        :hotSongs="hotSongs"
+        :currentSongList="currentSongList"
+      />
+    </keep-alive>
     <audio
       v-if="currentSong"
       style="height: 30px"
@@ -48,14 +57,20 @@
       @durationchange="duration = $event.target.duration"
       @timeupdate="currentTime = $event.target.currentTime"
       ref="audioEle"
+      loop
     ></audio>
 
     <PlayBar
       v-if="currentSong && !$route.meta.hidePlaybar"
       :currentSong="currentSong"
       :playing="playing"
+      :currentSongList="currentSongList"
       @start-play-song="$refs.audioEle.play()"
       @pause-play-song="$refs.audioEle.pause()"
+      :hotSongs="hotSongs"
+      :currentSongId="currentSongId"
+      @play-this-song="currentSong = $event"
+      @update:currentSongId="updateCurrentSongId"
     />
   </div>
 </template>
@@ -74,7 +89,13 @@ export default {
       currentSong: null,
       playing: false,
       currentPath: this.$route.path, // 添加当前路由路径到data中
-      hotSongs: []
+
+      hotSongs: [],
+      // newsong: [],
+
+      currentSongId: null,
+
+      currentSongList: [],
     };
   },
   watch: {
@@ -90,16 +111,44 @@ export default {
 
     playMusic() {
       console.log("Play method called22222222222");
-      // this.playing = !this.playing;
       this.$refs.audioEle.pause();
     },
     pauseMusic() {
       console.log("Play method called111111111111111111");
       this.$refs.audioEle.play();
-      // this.playing = !this.playing;
     },
-     handleHotSongs(songs) {
+    searchHotSongba(songs) {
       this.hotSongs = songs; // 接收子组件发送的数据
+    },
+    // handleNewsong(newsong) {
+    //   this.newsong = newsong;
+    // },
+    updateCurrentSongId(currentSongId) {
+      this.currentSongId = currentSongId;
+    },
+    updateCurrentSongIdFromDetail(songId) {
+      this.currentSongId = songId; // 更新当前歌曲的 id
+    },
+    HcurrentSongIdFromHot(songId) {
+      this.currentSongId = songId; // 更新当前歌曲的 id
+    },
+    updateScurrentSongId(songId) {
+      this.currentSongId = songId; // 更新当前歌曲的 id
+    },
+    updatehotSongs(songs) {
+      this.currentSongList = songs; // 更新当前歌曲列表为 hotSongs
+    },
+    updatesongMatchS(songs) {
+      this.currentSongList = songs; // 更新当前歌曲列表为 hotSongs
+    },
+    handleNewsong(newsong) {
+      this.currentSongList = newsong; // 更新当前歌曲列表为 newsong
+    },
+    handlePlaylistTracks(tracks) {
+      this.currentSongList = tracks; // 更新当前歌曲列表为 playlist.tracks
+    },
+     handleSongMatch(songMatch) {
+      this.currentSongList = songMatch; // 更新当前歌曲列表为 songMatch
     },
   },
 };

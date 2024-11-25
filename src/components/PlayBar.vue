@@ -1,6 +1,7 @@
 <template>
-  <div class="playbar" @click="gotoPlaySongPage">
+  <div class="playbar">
     <img
+      @click="gotoPlaySongPage"
       style="width: 30px; height: 30px"
       :src="
         currentSong.song
@@ -22,24 +23,57 @@
       @click.stop="$emit('pause-play-song')"
       class="playbar-button"
     >
-      暂停
+      <img
+        src="https://p6.music.126.net/obj/wonDlsKUwrLClGjCm8Kx/34207667955/0616/bd45/3537/50928579d6616a7f811d19da1162e149.png"
+        alt="pause"
+      />
     </button>
     <button
       v-else
       @click.stop="$emit('start-play-song')"
       class="playbar-button"
     >
-      播放
+      <img
+        src="https://p6.music.126.net/obj/wonDlsKUwrLClGjCm8Kx/34207669669/f020/7908/a749/34315097c835773c4e003e72fbbae607.png"
+        alt="play"
+      />
     </button>
-    <button class="playbar-button">
+
+    <button
+      ref="playButton"
+      class="playbar-button"
+      @click.stop="clickshowSongList"
+    >
       列表
     </button>
+    <!-- <button class="playbar-button">列表</button> -->
+    <section v-if="showSongList" class="listbar">
+      <ul>
+         <NewsonglistCard
+          v-for="item in currentSongList"
+          :key="item.id"
+          :item="item"
+          @play-this-song="setCurrentSong"
+          :currentSongId="currentSongId"
+          :playing="playing"
+        ></NewsonglistCard>
+      </ul>
+    </section>
   </div>
 </template>
 
 <script>
+import NewsonglistCard from "@/components/NewsonglistCard.vue";
 export default {
-  props: ["currentSong", "playing"],
+  props: ["currentSong", "playing", "newsong", "currentSongId","currentSongList"],
+  data: function () {
+    return {
+      showSongList: false,// 从父组件接收当前歌曲列表
+    };
+  },
+  components: {
+    NewsonglistCard,
+  },
   methods: {
     gotoPlaySongPage: function () {
       this.$router.push({
@@ -49,6 +83,13 @@ export default {
           id: this.currentSong.id,
         },
       });
+    },
+    clickshowSongList: function () {
+      this.showSongList = !this.showSongList;
+    },
+    setCurrentSong(item) {
+      this.$emit("play-this-song", item);
+      this.$emit("update:currentSongId", item.id);
     },
   },
 };
@@ -68,7 +109,30 @@ export default {
   box-sizing: border-box;
   color: #fff;
   font-size: 14px;
-
+  .listbar {
+    background-color: #ffffff;
+    width: 100%;
+    margin-bottom: 150px;
+    position: absolute;
+    bottom: -90px;
+    left: 0;
+    border-radius: 10px 10px 0px 0px;
+    box-shadow: 0px -10px 10px rgba(0, 0, 0, 0.5);
+    ul {
+      height: 350px; /* 设置固定高度 */
+      overflow-y: auto; /* 允许垂直滚动 */
+      margin: 0; /* 重置默认的外边距 */
+      padding: 0; /* 重置默认的内边距 */
+    }
+  }
+  .playbar-button {
+    width: 50px;
+    height: 35px;
+    img {
+      width: 30px;
+      height: 25px;
+    }
+  }
   &-cover {
     width: 40px;
     height: 40px;

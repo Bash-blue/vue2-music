@@ -3,7 +3,7 @@
     <h3>编辑推荐</h3>
     <ul class="personalized">
       <PlaylistCard
-        v-for="item in personalized.slice(0, 6)"
+        v-for="item in personalized.slice(6 * pice, 6 * (pice + 1))"
         :key="item.id"
         :item="item"
         :col="3"
@@ -12,9 +12,6 @@
 
     <h3 class="newest" style="padding-top: 35px">最新音乐</h3>
     <ul class="newsong">
-      <!-- <li v-for="item in newsong" :key="item.id">
-        {{ item.name }}
-      </li> -->
       <NewsonglistCard
         v-for="item in newsong"
         :key="item.id"
@@ -46,11 +43,14 @@ export default {
       personalized: [],
       NewsonglistCard: [],
       newsong: [],
+      pice: 0,
     };
   },
   methods: {
     setCurrentSong(item) {
       this.$emit("play-this-song", item);
+      this.$emit("update:currentSongId", item.id);
+      this.$emit("update:newsong", this.newsong);
     },
   },
   // 编辑推荐获取
@@ -64,7 +64,15 @@ export default {
     this.axios.get("/music/personalized/newsong").then((response) => {
       console.log(response.data);
       this.newsong = response.data.result;
+      this.$emit("update:newsong", this.newsong);
     });
+  },
+
+  activated: function () {
+    this.pice++;
+    if (this.pice > 4) {
+      this.pice = 0;
+    }
   },
 };
 </script>
