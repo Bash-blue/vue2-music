@@ -3,7 +3,7 @@
     <div class="hotop">
       <div class="hotopct">
         <div class="u-hmsprt hoticon"></div>
-        <div class="hottime">更新日期：11月22日</div>
+        <div class="hottime">更新日期：11月25日</div>
       </div>
     </div>
     <ul class="HomeHot">

@@ -9,7 +9,9 @@
         <h5>{{ item.name }}</h5>
         <p>
           <i class="u-hmsprt sghot"></i>
+          <span v-if="item.artists && item.artists.length > 0">{{ item.artists[0].name }}</span>
           <span
+          v-else
             v-for="ar in item.song ? item.song.artists : item.ar"
             :key="ar.id"
             >{{ ar.name }}</span
@@ -36,6 +38,7 @@ export default {
   methods: {
     playthissong(item) {
       this.$emit("play-this-song", item);
+      this.$emit('select-song', this.song);
     },
   },
 };

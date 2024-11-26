@@ -93,7 +93,7 @@ export default {
   data() {
     return {
       question: "",
-      result: false,
+      result: true,
       allMatch: [],
       songesult: false,
       songMatch: [],

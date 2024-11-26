@@ -10,7 +10,7 @@
         :src="`${item.picUrl}?imageView=1&type=webp&thumbnail=247x0`"
         alt=""
       />
-      <span>{{ item.playCount }}</span>
+        <span>{{ formattedPlayCount }}</span>
     </div>
     <h5>{{ item.name }}</h5>
   </li>
@@ -28,6 +28,18 @@ export default {
     gotoPlaylistDetailPage: function (id) {
       // console.log(123);
       this.$router.push({ path: "playlist", query: { id } });
+    },
+  },
+   computed: {
+    formattedPlayCount() {
+      const { playCount } = this.item;
+      if (playCount < 10000) {
+        return playCount.toString(); // 不超过十万正常显示
+      } else if (playCount < 100000000) {
+        return (playCount / 10000).toFixed(1) + '万'; // 十万到一亿以下，显示为万
+      } else {
+        return (playCount / 100000000).toFixed(1) + '亿'; // 一亿以上，显示为亿
+      }
     },
   },
 };
@@ -49,6 +61,7 @@ export default {
       top: 0;
       right: 0;
       color: #fff;
+      font-size: 12px;
     }
   }
   h5 {

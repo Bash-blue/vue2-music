@@ -5,7 +5,7 @@
       class="playtop"
       :style="{ backgroundImage: 'url(' + playlist.coverImgUrl + ')' }"
     ></div>
-    <span>{{ playlist.playCount }}</span>
+    <span>{{ formattedPlayCount   }}</span>
     <img :src="playlist.coverImgUrl" alt="" />
     <h5>{{ playlist.name }}</h5>
     <div>
@@ -63,6 +63,19 @@ export default {
       this.tip = "路由参数不合法";
     }
   },
+    computed: {
+    formattedPlayCount() {
+      if (!this.playlist) return '0';
+      const { playCount } = this.playlist;
+      if (playCount < 10000) {
+        return playCount.toString(); // 不超过十万正常显示
+      } else if (playCount < 100000000) {
+        return (playCount / 10000).toFixed(1) + '万'; // 十万到一亿以下，显示为万
+      } else {
+        return (playCount / 100000000).toFixed(1) + '亿'; // 一亿以上，显示为亿
+      }
+    },
+  },
 };
 </script>
 
@@ -85,11 +98,13 @@ export default {
   z-index: 1;
 }
 span {
-  position: absolute;
-  top: 117px;
-  left: 58px;
-  color: #fff;
-  z-index: 1;
+    position: absolute;
+    top: 110px;
+    left: 85px;
+    color: #fff;
+    z-index: 1;
+    font-size: 12px;
+    font-weight: 800;
 }
 img {
   width: 35%;

@@ -24,29 +24,33 @@
         >
       </div>
     </nav>
-    <keep-alive :exclude="['SongDetail']">
-      <router-view
-        @playMusic="playMusic"
-        @pauseMusic="pauseMusic"
-        @play-this-song="currentSong = $event"
-        @update:newsong="handleNewsong"
-        @update:currentSongId="updateCurrentSongId"
-        @update:ScurrentSongId="updateScurrentSongId"
-        @update:DcurrentSongId="updateCurrentSongIdFromDetail"
-        @update:HcurrentSongId="HcurrentSongIdFromHot"
-        @update:playlistTracks="handlePlaylistTracks"
-        @update:hotSongs="updatehotSongs"
-        @update:songMatch="updatesongMatchS"
-        :currentSongId="currentSong?.id"
-        :playing="playing"
-        :duration="duration"
-        :currentTime="currentTime"
-        @change-play-time="$refs.audioEle.currentTime = $event"
-        @send-hot-songs="searchHotSongba"
-        :hotSongs="hotSongs"
-        :currentSongList="currentSongList"
-      />
-    </keep-alive>
+
+    <router-view
+      @playMusic="playMusic"
+      @pauseMusic="pauseMusic"
+      @play-this-song="currentSong = $event"
+      @update:newsong="handleNewsong"
+      @update:currentSongId="updateCurrentSongId"
+      @update:ScurrentSongId="updateScurrentSongId"
+      @update:DcurrentSongId="updateCurrentSongIdFromDetail"
+      @update:HcurrentSongId="HcurrentSongIdFromHot"
+      @update:playlistTracks="handlePlaylistTracks"
+      @update:hotSongs="updatehotSongs"
+      @update:songMatch="updatesongMatchS"
+      :currentSongId="currentSong?.id"
+      :playing="playing"
+      :duration="duration"
+      :currentTime="currentTime"
+      @change-play-time="$refs.audioEle.currentTime = $event"
+      @send-hot-songs="searchHotSongba"
+      :hotSongs="hotSongs"
+      :currentSongList="currentSongList"
+      ref="songDetail"
+      @singleplay="singleplay"
+      @listplay="listplay"
+      @randomplay="randomplay"
+    />
+
     <audio
       v-if="currentSong"
       style="height: 30px"
@@ -57,9 +61,12 @@
       @durationchange="duration = $event.target.duration"
       @timeupdate="currentTime = $event.target.currentTime"
       ref="audioEle"
-      loop
-    ></audio>
+      
+      @ended="handleAudioEnded"
 
+      @randomplay="randomplay"
+    ></audio>
+    <!-- loop -->
     <PlayBar
       v-if="currentSong && !$route.meta.hidePlaybar"
       :currentSong="currentSong"
@@ -147,8 +154,20 @@ export default {
     handlePlaylistTracks(tracks) {
       this.currentSongList = tracks; // 更新当前歌曲列表为 playlist.tracks
     },
-     handleSongMatch(songMatch) {
+    handleSongMatch(songMatch) {
       this.currentSongList = songMatch; // 更新当前歌曲列表为 songMatch
+    },
+    singleplay() {
+      this.$refs.audioEle.loop = true;
+    },
+    listplay() {
+      this.$refs.audioEle.loop = false;
+    },
+    randomplay() {
+        console.log(3333333333333333333333333333333333333);
+    },
+    handleAudioEnded() {
+      this.$refs.songDetail.playNextSong();
     },
   },
 };

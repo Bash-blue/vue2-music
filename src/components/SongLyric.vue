@@ -8,7 +8,7 @@
             lyricElementsHeight
               .slice(0, currentLyricIndex)
               .reduce((total, num) => total + num, 0) +
-          45 +
+          50 +
           'px',
       }"
     >
@@ -21,7 +21,7 @@
         <span
           :style="{
             animationDuration:
-              ((parsedLyric[index + 1]?.time || duration) - item.time) * 0.8 +
+              ((parsedLyric[index + 1]?.time || duration) - item.time) * 1 +
               's',
           }"
           >{{ item.text }}</span
@@ -37,6 +37,7 @@ export default {
     currentTime: Number,
     duration: Number,
     playing: Boolean,
+    currentSongId: Number,
   },
   data: function () {
     return {
@@ -44,23 +45,38 @@ export default {
       lyricElementsHeight: [],
     };
   },
-  created: function () {
-    this.axios
-      .get("/lyric", {
-        params: {
-          id: this.$route.query.id,
-        },
-      })
-      .then((res) => {
-        // console.log(res.data.lrc.lyric);
-        this.lyric = res.data.lrc.lyric;
+  watch: {
+    currentSongId(newId) {
+      // 当 currentSongId 发生变化时，重新获取歌词
+      this.fetchLyric(newId);
+    },
+  },
+  methods: {
+    fetchLyric(songId) {
+      this.axios
+        .get("/lyric", {
+          params: {
+            id: songId, // 使用传入的 songId 而不是 this.$route.query.id
+          },
+        })
+        .then((res) => {
+          // 处理响应结果，将歌词赋值给组件的数据属性
+          this.lyric = res.data.lrc.lyric;
 
-        this.$nextTick(() => {
-          this.lyricElementsHeight = this.$refs.lyricElements.map(
-            (ele) => ele.offsetHeight
-          );
+          // 在下一次 DOM 更新完成后计算歌词元素的高度
+          this.$nextTick(() => {
+            this.lyricElementsHeight = this.$refs.lyricElements.map(
+              (ele) => ele.offsetHeight
+            );
+          });
+        })
+        .catch((error) => {
+          console.error("获取歌词失败:", error);
         });
-      });
+    },
+  },
+  created: function () {
+    this.fetchLyric(this.currentSongId);
   },
   computed: {
     currentLyricIndex: function () {
@@ -93,12 +109,22 @@ export default {
 @keyframes xxx {
   0% {
     background-position-x: 100%;
-    background-image: linear-gradient(to right, rgb(30, 30, 43) 49%, rgb(198, 194, 194) 51%);
+    font-weight: 800;
+    background-image: linear-gradient(
+      to right,
+      rgb(255, 0, 0) 49%,
+      rgb(255, 255, 255) 51%
+    );
     color: transparent;
   }
   100% {
     background-position-x: 0%;
-    background-image: linear-gradient(to right, rgb(30, 30, 43) 49%, rgb(198, 194, 194)51%);
+    font-weight: 800;
+    background-image: linear-gradient(
+      to right,
+      rgb(255, 0, 0) 49%,
+      rgb(255, 255, 255) 51%
+    );
     color: transparent;
   }
 }
@@ -109,7 +135,7 @@ export default {
   //
   .list {
     // padding: 10px;
-    transition: all 0.3s;
+    transition: all 0.2s;
 
     li {
       span {
